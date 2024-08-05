@@ -1,6 +1,6 @@
 # Camunda Platform 8
 
-This repository contains links to Camunda Platform 8 resources, the official release artifacts (binaries), and supporting config files for running Docker Compose as a local development option. 
+This repository contains links to Camunda Platform 8 resources, the official release artifacts (binaries), and supporting config files for running Docker Compose as a local development option.
 
 :warning: **Docker Compose is only recommended for local development.** :warning:
 
@@ -33,6 +33,7 @@ Be sure you are in the correct directory when running all the following commands
 To spin up a complete Camunda Platform 8 Self-Managed environment locally the [docker-compose.yaml](docker-compose.yaml) file in this repository can be used.
 
 The full environment contains these components:
+
 - Zeebe
 - Operate
 - Tasklist
@@ -53,6 +54,7 @@ docker compose --profile full up -d
 Wait a few minutes for the environment to start up and settle down. Monitor the logs, especially the Keycloak container log, to ensure the components have started.
 
 Now you can navigate to the different web apps and log in with the user `demo` and password `demo`:
+
 - Operate: [http://localhost:8081](http://localhost:8081)
 - Tasklist: [http://localhost:8082](http://localhost:8082)
 - Optimize: [http://localhost:8083](http://localhost:8083)
@@ -61,6 +63,7 @@ Now you can navigate to the different web apps and log in with the user `demo` a
 - Web Modeler: [http://localhost:8070](http://localhost:8070)
 
 Keycloak is used to manage users. Here you can log in with the user `admin` and password `admin`
+
 - Keycloak: [http://localhost:18080/auth/](http://localhost:18080/auth/)
 
 The workflow engine Zeebe is available using gRPC at `localhost:26500`.
@@ -93,9 +96,11 @@ Feedback and updates are welcome!
 By default, the Zeebe GRPC API is publicly accessible without requiring any client credentials for development purposes.
 
 You can however enable authentication of GRPC requests in Zeebe by setting the environment variable `ZEEBE_AUTHENTICATION_MODE` to `identity`, e.g. via running:
+
 ```
 ZEEBE_AUTHENTICATION_MODE=identity docker compose up -d
 ```
+
 or by modifying the default value in the [`.env`](.env) file.
 
 ## Connectors
@@ -127,6 +132,7 @@ You can navigate to the Kibana web app and start exploring the data without logi
 
 > **Note**
 > You need to configure the index patterns in Kibana before you can explore the data.
+>
 > - Go to `Management > Stack Management > Kibana > Index Patterns`.
 > - Create a new index pattern. For example, `zeebe-record-*` matches the exported records.
 >   - If you don't see any indexes then make sure to export some data first (e.g. deploy a process). The indexes of the records are created when the first record of this type is exported.
@@ -141,18 +147,22 @@ You can navigate to the Kibana web app and start exploring the data without logi
 ### Deploy or execute a process
 
 #### Without authentication
+
 Once you are ready to deploy or execute processes use these settings to deploy to the local Zeebe instance:
-* Authentication: `None`
-* URL: `http://localhost:26500`
+
+- Authentication: `None`
+- URL: `http://localhost:26500`
 
 #### With Zeebe request authentication
+
 If you enabled authentication for GRPC requests on Zeebe you need to provide client credentials when deploying and executing processes:
-* Authentication: `OAuth`
-* URL: `http://localhost:26500`
-* Client ID: `zeebe`
-* Client secret: `zecret`
-* OAuth URL: `http://localhost:18080/auth/realms/camunda-platform/protocol/openid-connect/token`
-* Audience: `zeebe-api`
+
+- Authentication: `OAuth`
+- URL: `http://localhost:26500`
+- Client ID: `zeebe`
+- Client secret: `zecret`
+- OAuth URL: `http://localhost:18080/auth/realms/camunda-platform/protocol/openid-connect/token`
+- Audience: `zeebe-api`
 
 ## Web Modeler Self-Managed
 
@@ -180,40 +190,48 @@ docker compose --profile modeling down
 ```
 
 ### Login
+
 You can access Web Modeler Self-Managed and log in with the user `demo` and password `demo` at [http://localhost:8070](http://localhost:8070).
 
 ### Deploy or execute a process
 
 #### Without authentication
+
 Once you are ready to deploy or execute processes use these settings to deploy to the local Zeebe instance:
-* Authentication: `None`
-* URL: `http://zeebe:26500`
+
+- Authentication: `None`
+- URL: `http://zeebe:26500`
 
 #### With Zeebe request authentication
+
 If you enabled authentication for GRPC requests on Zeebe you need to provide client credentials when deploying and executing processes:
-* Authentication: `OAuth`
-* URL: `http://zeebe:26500`
-* Client ID: `zeebe`
-* Client secret: `zecret`
-* OAuth URL: `http://keycloak:8080/auth/realms/camunda-platform/protocol/openid-connect/token`
-* Audience: `zeebe-api`
+
+- Authentication: `OAuth`
+- URL: `http://zeebe:26500`
+- Client ID: `zeebe`
+- Client secret: `zecret`
+- OAuth URL: `https://cakeycloak.mzakeri.ir/auth/realms/camunda-platform/protocol/openid-connect/token`
+- Audience: `zeebe-api`
 
 ### Emails
-The setup includes [Mailpit](https://github.com/axllent/mailpit) as a test SMTP server. It captures all emails sent by Web Modeler, but does not forward them to the actual recipients. 
+
+The setup includes [Mailpit](https://github.com/axllent/mailpit) as a test SMTP server. It captures all emails sent by Web Modeler, but does not forward them to the actual recipients.
 
 You can access emails in Mailpit's Web UI at [http://localhost:8075](http://localhost:8075).
 
 ## Troubleshooting
 
 ### Submitting Issues
+
 When submitting an issue on this repository, please make sure your issue is related to the docker compose deployment
 method of the Camunda Platform. All questions regarding to functionality of the web applications should be instead
 posted on the [Camunda Forum](https://forum.camunda.io/). This is the best way for users to query for existing answers
 that others have already encountered. We also have a category on that forum specifically for [Deployment Related Topics](https://forum.camunda.io/c/camunda-platform-8-topics/deploying-camunda-platform-8/33).
 
 ### Running on arm64 based hardware
+
 When using arm64-based hardware like a M1 or M2 Mac the Keycloak container might not start because Bitnami only
-provides amd64-based images for versions <  22. You can build and tag an arm-based
+provides amd64-based images for versions < 22. You can build and tag an arm-based
 image locally using the following command. After building and tagging the image you can start the environment as
 described in [Using docker-compose](#using-docker-compose).
 
@@ -225,7 +243,7 @@ $ DOCKER_BUILDKIT=0 docker build -t bitnami/keycloak:19.0.3 "https://github.com/
 
 You can control access to specific processes and decision tables in Operate and Tasklist with [resource based authorization](https://docs.camunda.io/docs/self-managed/concepts/access-control/resource-authorizations/).
 
-This feature is disabled by default and can be enabled by setting 
+This feature is disabled by default and can be enabled by setting
 `RESOURCE_AUTHORIZATIONS_ENABLED` to `true`, either via the [`.env`](.env) file or through the command line:
 
 ```
